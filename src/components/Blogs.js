@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Blog from "./Blog";
+import Fallback from "./Fallback";
 
 const Blogs = () => {
   const [blogs, setBlogs] = useState();
+  const [fallbackText, setFallBackText] = useState("Loading...");
   const sendRequest = async () => {
     const res = await axios
       .get(`${process.env.REACT_APP_BACKEND_API}/api/blog`)
@@ -12,12 +14,14 @@ const Blogs = () => {
     return data;
   };
   useEffect(() => {
-    sendRequest().then((data) => setBlogs(data.blogs));
+    sendRequest().then((data) => {
+      if (data.blogs.length === 0) setFallBackText("No blogs found");
+      setBlogs(data.blogs);
+    });
   }, []);
-  console.log(blogs);
   return (
     <div>
-      {blogs &&
+      {blogs && blogs.length > 0 ? (
         blogs.map((blog, index) => (
           <Blog
             id={blog._id}
@@ -27,7 +31,10 @@ const Blogs = () => {
             imageURL={blog.image}
             userName={blog.user.name}
           />
-        ))}
+        ))
+      ) : (
+        <Fallback message={fallbackText} />
+      )}
     </div>
   );
 };

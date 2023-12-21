@@ -23,7 +23,7 @@ const Auth = () => {
   };
   const sendRequest = async (type = "login") => {
     try {
-      requestInProgress(true);
+      setRequestInProgress(true);
       const res = await axios.post(
         `${process.env.REACT_APP_BACKEND_API}/api/user/${type}`,
         {

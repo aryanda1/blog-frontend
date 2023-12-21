@@ -14,35 +14,55 @@ const Auth = () => {
     password: "",
   });
   const [isSignup, setIsSignup] = useState(false);
+  const [requestInProgress, setRequestInProgress] = useState(false);
   const handleChange = (e) => {
-    setInputs((prevState) => {
-      return {
-        ...prevState,
-        [e.target.name]: e.target.value,
-      };
-    });
+    setInputs((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
   };
   const sendRequest = async (type = "login") => {
-    const res = await axios
-      .post(`${process.env.REACT_APP_BACKEND_API}/api/user/${type}`, {
-        name: inputs.name,
-        email: inputs.email,
-        password: inputs.password,
-      })
-      .catch((err) => console.log(err));
+    try {
+      requestInProgress(true);
+      const res = await axios.post(
+        `${process.env.REACT_APP_BACKEND_API}/api/user/${type}`,
+        {
+          name: inputs.name,
+          email: inputs.email,
+          password: inputs.password,
+        }
+      );
 
-    const data = await res.data;
-    console.log(data);
-    return data;
+      const data = await res.data;
+      setRequestInProgress(false);
+      // Check if the request was unsuccessful
+      if (data === undefined) {
+        throw new Error("Request was unsuccessful");
+      }
+
+      return data;
+    } catch (error) {
+      // Log the error or handle it as needed
+      console.error("Error in sendRequest:", error);
+
+      // Re-throw the error to propagate it to the calling function
+      throw error;
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(inputs);
-    sendRequest(isSignup ? "signup" : "login")
-      .then((data) => localStorage.setItem("userId", data.user._id))
-      .then(() => dispath(authActions.login()))
-      .then(() => naviagte("/blogs"));
+    try {
+      let data = await sendRequest(isSignup ? "signup" : "login");
+      localStorage.setItem("userId", data.user._id);
+      await dispath(authActions.login());
+      naviagte("/blogs");
+    } catch (err) {
+      alert(
+        (err.response && err.response.data && err.response.data.message) ||
+          err.message
+      );
+    }
   };
   return (
     <div>
@@ -69,6 +89,7 @@ const Auth = () => {
               value={inputs.name}
               placeholder="Name"
               margin="normal"
+              required
             />
           )}{" "}
           <TextField
@@ -78,6 +99,7 @@ const Auth = () => {
             type={"email"}
             placeholder="Email"
             margin="normal"
+            required
           />
           <TextField
             name="password"
@@ -86,6 +108,7 @@ const Auth = () => {
             type={"password"}
             placeholder="Password"
             margin="normal"
+            required
           />
           <Button
             type="submit"
@@ -98,6 +121,7 @@ const Auth = () => {
           <Button
             onClick={() => setIsSignup(!isSignup)}
             sx={{ borderRadius: 3, marginTop: 3 }}
+            disabled={requestInProgress}
           >
             Change To {isSignup ? "Login" : "Signup"}
           </Button>

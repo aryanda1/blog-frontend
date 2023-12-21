@@ -19,7 +19,7 @@ const Header = () => {
   const isLoggedIn = useSelector((state) => state.isLoggedIn);
   const { pathname } = useLocation();
   const [value, setValue] = useState(
-    pathname === "/blogs" ? 0 : pathname === "/myBlogs" ? 1 : 2
+    pathname === "/myBlogs" ? 1 : pathname === "/blogs/add" ? 2 : 0
   );
   return (
     <AppBar

@@ -8,7 +8,8 @@ import {
   Tabs,
   Tab,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+// import {css} from @emoto
+import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../store";
 import { useStyles } from "./utils";
@@ -16,8 +17,10 @@ const Header = () => {
   const classes = useStyles();
   const dispath = useDispatch();
   const isLoggedIn = useSelector((state) => state.isLoggedIn);
-
-  const [value, setValue] = useState();
+  const { pathname } = useLocation();
+  const [value, setValue] = useState(
+    pathname === "/blogs" ? 0 : pathname === "/myBlogs" ? 1 : 2
+  );
   return (
     <AppBar
       position="sticky"

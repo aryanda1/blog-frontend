@@ -16,7 +16,7 @@ function App() {
   const location = useLocation();
 
   const isLoggedIn = useSelector((state) => state.isLoggedIn);
-  console.log(isLoggedIn);
+  // console.log(isLoggedIn);
   useEffect(() => {
     if (localStorage.getItem("userId")) {
       dispath(authActions.login());
@@ -27,7 +27,7 @@ function App() {
       }
     }
   }, [dispath, location.pathname, navigate]);
-  console.log(isLoggedIn);
+  // console.log(isLoggedIn);
   return (
     <React.Fragment>
       <header>

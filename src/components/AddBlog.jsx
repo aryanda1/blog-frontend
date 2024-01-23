@@ -21,7 +21,7 @@ const AddBlog = () => {
   };
   const sendRequest = async () => {
     const res = await axios
-      .post(`${process.env.REACT_APP_BACKEND_API}/api/blog/add`, {
+      .post(`${import.meta.env.VITE_BACKEND_API}/api/blog/add`, {
         title: inputs.title,
         description: inputs.description,
         image: inputs.imageURL,

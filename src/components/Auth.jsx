@@ -27,7 +27,7 @@ const Auth = () => {
     try {
       setRequestInProgress(true);
       const res = await axios.post(
-        `${process.env.REACT_APP_BACKEND_API}/api/user/${type}`,
+        `${import.meta.env.VITE_BACKEND_API}/api/user/${type}`,
         {
           name: inputs.name,
           email: inputs.email,

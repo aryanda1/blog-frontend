@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   AppBar,
   Typography,
@@ -18,15 +18,20 @@ const Header = () => {
   const dispath = useDispatch();
   const isLoggedIn = useSelector((state) => state.isLoggedIn);
   const { pathname } = useLocation();
-  const [value, setValue] = useState(
-    pathname === "/myBlogs"
-      ? 1
-      : pathname === "/blogs/add"
-      ? 2
-      : pathname === "/blogs"
-      ? 0
-      : -1
-  );
+  const [value, setValue] = useState(false);
+  useEffect(() => {
+    // Update the value based on the initial pathname
+    setValue(
+      pathname === "/myBlogs"
+        ? 1
+        : pathname === "/blogs/add"
+        ? 2
+        : pathname === "/blogs"
+        ? 0
+        : false
+    );
+  }, [pathname]);
+  console.log(pathname, value);
   return (
     <AppBar
       position="sticky"

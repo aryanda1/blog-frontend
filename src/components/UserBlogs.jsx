@@ -1,35 +1,40 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Blog from "./Blog";
+
 import Fallback from "./Fallback";
 
-const Blogs = () => {
-  const [blogs, setBlogs] = useState();
+const UserBlogs = () => {
+  const [user, setUser] = useState();
+  const id = localStorage.getItem("userId");
   const [fallbackText, setFallBackText] = useState("Loading...");
+
   const sendRequest = async () => {
     const res = await axios
-      .get(`${process.env.REACT_APP_BACKEND_API}/api/blog`)
+      .get(`${import.meta.env.VITE_BACKEND_API}/api/blog/user/${id}`)
       .catch((err) => console.log(err));
     const data = await res.data;
     return data;
   };
   useEffect(() => {
     sendRequest().then((data) => {
-      if (data.blogs.length === 0) setFallBackText("No blogs found");
-      setBlogs(data.blogs);
+      if (data.user.blogs.length === 0) setFallBackText("No blogs found");
+      setUser(data.user);
     });
   }, []);
   return (
     <div>
-      {blogs && blogs.length > 0 ? (
-        blogs.map((blog, index) => (
+      {" "}
+      {user && user.blogs.length ? (
+        user.blogs.map((blog, index) => (
           <Blog
             id={blog._id}
-            isUser={localStorage.getItem("userId") === blog.user._id}
+            key={index}
+            isUser={true}
             title={blog.title}
             description={blog.description}
             imageURL={blog.image}
-            userName={blog.user.name}
+            userName={user.name}
           />
         ))
       ) : (
@@ -39,4 +44,4 @@ const Blogs = () => {
   );
 };
 
-export default Blogs;
+export default UserBlogs;

@@ -22,7 +22,7 @@ const Blog = ({ title, description, imageURL, userName, isUser, id }) => {
   };
   const deleteRequest = async () => {
     const res = await axios
-      .delete(`${process.env.REACT_APP_BACKEND_API}/api/blog/${id}`)
+      .delete(`${import.meta.env.VITE_BACKEND_API}/api/blog/${id}`)
       .catch((err) => console.log(err));
     const data = await res.data;
     return data;

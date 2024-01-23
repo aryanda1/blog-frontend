@@ -19,7 +19,7 @@ const BlogDetail = () => {
   };
   const fetchDetails = async () => {
     const res = await axios
-      .get(`${process.env.REACT_APP_BACKEND_API}/api/blog/${id}`)
+      .get(`${import.meta.env.VITE_BACKEND_API}/api/blog/${id}`)
       .catch((err) => console.log(err));
     const data = await res.data;
     return data;
@@ -35,7 +35,7 @@ const BlogDetail = () => {
   }, [id]);
   const sendRequest = async () => {
     const res = await axios
-      .put(`${process.env.REACT_APP_BACKEND_API}/api/blog/update/${id}`, {
+      .put(`${import.meta.env.VITE_BACKEND_API}/api/blog/update/${id}`, {
         title: inputs.title,
         description: inputs.description,
       })

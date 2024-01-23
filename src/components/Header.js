@@ -19,7 +19,13 @@ const Header = () => {
   const isLoggedIn = useSelector((state) => state.isLoggedIn);
   const { pathname } = useLocation();
   const [value, setValue] = useState(
-    pathname === "/myBlogs" ? 1 : pathname === "/blogs/add" ? 2 : 0
+    pathname === "/myBlogs"
+      ? 1
+      : pathname === "/blogs/add"
+      ? 2
+      : pathname === "/blogs"
+      ? 0
+      : -1
   );
   return (
     <AppBar
@@ -76,7 +82,7 @@ const Header = () => {
               </Button>
               <Button
                 LinkComponent={Link}
-                to="/auth"
+                to="/auth?mode=signup"
                 variant="contained"
                 sx={{ margin: 1, borderRadius: 10 }}
                 color="warning"

@@ -3,17 +3,19 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { authActions } from "../store";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 const Auth = () => {
   const naviagte = useNavigate();
   const dispath = useDispatch();
+  const [searchParams] = useSearchParams();
   const [inputs, setInputs] = useState({
     name: "",
     email: "",
     password: "",
   });
-  const [isSignup, setIsSignup] = useState(false);
+  // const [isSignup, setIsSignup] = useState(false);
+  const isSignup = searchParams.get("mode") === "signup";
   const [requestInProgress, setRequestInProgress] = useState(false);
   const handleChange = (e) => {
     setInputs((prevState) => ({
@@ -119,9 +121,11 @@ const Auth = () => {
             Submit
           </Button>
           <Button
-            onClick={() => setIsSignup(!isSignup)}
+            // onClick={() => setIsSignup(!isSignup)}
             sx={{ borderRadius: 3, marginTop: 3 }}
             disabled={requestInProgress}
+            container={<Link />}
+            to={`/auth?mode=${isSignup ? "login" : "signup"}`}
           >
             Change To {isSignup ? "Login" : "Signup"}
           </Button>

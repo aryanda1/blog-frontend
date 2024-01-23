@@ -4,7 +4,12 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useStyles } from "./utils";
 
-const labelStyles = { mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" };
+const labelStyles = {
+  mb: 1,
+  mt: 2,
+  fontSize: "clamp(1rem,2vw,1.5rem)",
+  fontWeight: "bold",
+};
 const AddBlog = () => {
   const classes = useStyles();
   const navigate = useNavigate();
@@ -60,6 +65,7 @@ const AddBlog = () => {
             color="grey"
             variant="h2"
             textAlign={"center"}
+            fontSize={"clamp(1.5rem,3vw,3.75rem)"}
           >
             Post Your Blog
           </Typography>
@@ -67,37 +73,40 @@ const AddBlog = () => {
             Title
           </InputLabel>
           <TextField
+            required
             className={classes.font}
             name="title"
             onChange={handleChange}
             value={inputs.title}
-            margin="auto"
+            // margin="auto"
             variant="outlined"
           />
           <InputLabel className={classes.font} sx={labelStyles}>
             Description
           </InputLabel>
           <TextField
+            required
             className={classes.font}
             name="description"
             onChange={handleChange}
             value={inputs.description}
-            margin="auto"
+            // margin="auto"
             variant="outlined"
           />
           <InputLabel className={classes.font} sx={labelStyles}>
             ImageURL
           </InputLabel>
           <TextField
+            required
             className={classes.font}
             name="imageURL"
             onChange={handleChange}
             value={inputs.imageURL}
-            margin="auto"
+            // margin="auto"
             variant="outlined"
           />
           <Button
-            sx={{ mt: 2, borderRadius: 4 }}
+            sx={{ mt: 2, borderRadius: 4, fontSize: "clamp(1rem,2vw,1.5rem)" }}
             variant="contained"
             color="warning"
             type="submit"

@@ -37,7 +37,8 @@ const Blog = ({ title, description, imageURL, userName, isUser, id }) => {
       {" "}
       <Card
         sx={{
-          width: "40%",
+          width: "80%",
+          maxWidth: "550px",
           margin: "auto",
           mt: 2,
           padding: 2,

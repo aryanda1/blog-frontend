@@ -124,7 +124,7 @@ const Auth = () => {
             // onClick={() => setIsSignup(!isSignup)}
             sx={{ borderRadius: 3, marginTop: 3 }}
             disabled={requestInProgress}
-            container={<Link />}
+            LinkComponent={Link}
             to={`/auth?mode=${isSignup ? "login" : "signup"}`}
           >
             Change To {isSignup ? "Login" : "Signup"}

@@ -48,6 +48,7 @@ const Auth = () => {
       console.error("Error in sendRequest:", error);
 
       // Re-throw the error to propagate it to the calling function
+      setRequestInProgress(false);
       throw error;
     }
   };
@@ -117,6 +118,7 @@ const Auth = () => {
             variant="contained"
             sx={{ borderRadius: 3, marginTop: 3 }}
             color="warning"
+            disabled={requestInProgress}
           >
             Submit
           </Button>

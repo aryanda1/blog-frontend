@@ -31,7 +31,7 @@ const Header = () => {
         : false
     );
   }, [pathname]);
-  console.log(pathname, value);
+  // console.log(pathname, value);
   return (
     <AppBar
       position="sticky"

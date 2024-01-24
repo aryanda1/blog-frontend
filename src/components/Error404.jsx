@@ -1,3 +1,5 @@
+import { Button } from "@mui/material";
+import { Link } from "react-router-dom";
 import styles from "./Error404.module.css";
 import React from "react";
 function Error() {
@@ -446,6 +448,15 @@ function Error() {
           />
         </g>
       </svg>
+      <Button
+        LinkComponent={Link}
+        to="/blogs"
+        variant="contained"
+        sx={{ margin: 1, borderRadius: 10, fontSize: "large" }}
+        color="warning"
+      >
+        Go to HomePage
+      </Button>
     </div>
   );
 }

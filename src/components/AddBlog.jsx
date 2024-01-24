@@ -1,7 +1,6 @@
 import { Box, Button, InputLabel, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useStyles } from "./utils";
 
 const labelStyles = {
@@ -12,7 +11,7 @@ const labelStyles = {
 };
 const AddBlog = () => {
   const classes = useStyles();
-  const navigate = useNavigate();
+  const [requestInProgress, setRequestInProgress] = useState(false);
   const [inputs, setInputs] = useState({
     title: "",
     description: "",
@@ -38,10 +37,23 @@ const AddBlog = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (
+      inputs.title.length < 3 ||
+      inputs.description.length < 3 ||
+      inputs.imageURL.length < 3
+    ) {
+      window.alert("Please fill all the fields correctly");
+      return;
+    }
+    setRequestInProgress(true);
     console.log(inputs);
     sendRequest()
       .then((data) => console.log(data))
-      .then(() => navigate("/blogs"));
+      .then(() => window.alert("Blog added successfully"))
+      .catch((err) => {
+        window.alert(err.message || "Something went wrong!");
+      })
+      .finally(() => setRequestInProgress(false));
   };
   return (
     <div>
@@ -110,8 +122,9 @@ const AddBlog = () => {
             variant="contained"
             color="warning"
             type="submit"
+            disabled={requestInProgress}
           >
-            Submit
+            {requestInProgress ? "Adding..." : "Add Blog"}
           </Button>
         </Box>
       </form>

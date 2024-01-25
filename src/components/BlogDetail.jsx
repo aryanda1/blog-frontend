@@ -1,6 +1,6 @@
 import { Button, InputLabel, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/material";
-import axios from "axios";
+import axiosPrivateService from "../axios/axiosPrivate";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 const labelStyles = { mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" };
@@ -18,29 +18,32 @@ const BlogDetail = () => {
     }));
   };
   const fetchDetails = async () => {
-    const res = await axios
-      .get(`${import.meta.env.VITE_BACKEND_API}/api/blog/${id}`)
-      .catch((err) => console.log(err));
+    const res = await axiosPrivateService(`/api/blog/${id}`);
     const data = await res.data;
     return data;
   };
   useEffect(() => {
-    fetchDetails().then((data) => {
-      setBlog(data.blog);
-      setInputs({
-        title: data.blog.title,
-        description: data.blog.description,
+    fetchDetails()
+      .then((data) => {
+        setBlog(data.blog);
+        setInputs({
+          title: data.blog.title,
+          description: data.blog.description,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        window.alert(err.message || "Something went wrong!");
       });
-    });
   }, [id]);
   const sendRequest = async () => {
-    const res = await axios
-      .put(`${import.meta.env.VITE_BACKEND_API}/api/blog/update/${id}`, {
+    const res = await axiosPrivateService(`api/blog/update/${id}`, {
+      method: "PUT",
+      data: JSON.stringify({
         title: inputs.title,
         description: inputs.description,
-      })
-      .catch((err) => console.log(err));
-
+      }),
+    });
     const data = await res.data;
     return data;
   };
@@ -49,8 +52,15 @@ const BlogDetail = () => {
     e.preventDefault();
     console.log(inputs);
     sendRequest()
-      .then((data) => console.log(data))
-      .then(() => navigate("/myBlogs/"));
+      .then((data) => {
+        console.log(data);
+        window.alert("Blog Updated successfully!");
+      })
+      .then(() => navigate("/myBlogs"))
+      .catch((err) => {
+        console.log(err);
+        window.alert(err.message || "Something went wrong!");
+      });
   };
 
   return (

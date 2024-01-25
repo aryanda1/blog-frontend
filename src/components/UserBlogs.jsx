@@ -1,26 +1,27 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import Blog from "./Blog";
-
+import axiosPrivateService from "../axios/axiosPrivate";
 import Fallback from "./Fallback";
 
 const UserBlogs = () => {
   const [user, setUser] = useState();
-  const id = localStorage.getItem("userId");
   const [fallbackText, setFallBackText] = useState("Loading...");
 
   const sendRequest = async () => {
-    const res = await axios
-      .get(`${import.meta.env.VITE_BACKEND_API}/api/blog/user/${id}`)
-      .catch((err) => console.log(err));
+    const res = await axiosPrivateService(`/api/blog/user`);
     const data = await res.data;
     return data;
   };
   useEffect(() => {
-    sendRequest().then((data) => {
-      if (data.user.blogs.length === 0) setFallBackText("No blogs found");
-      setUser(data.user);
-    });
+    sendRequest()
+      .then((data) => {
+        if (data.user.blogs.length === 0) setFallBackText("No blogs found");
+        setUser(data.user);
+      })
+      .catch((err) => {
+        console.log(err);
+        window.alert(err.message || "Something went wrong!");
+      });
   }, []);
   return (
     <div>

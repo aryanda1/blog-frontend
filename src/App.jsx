@@ -12,29 +12,42 @@ import Auth from "./components/Auth";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "./store";
 function App() {
-  const dispath = useDispatch();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
   const isLoggedIn = useSelector((state) => state.isLoggedIn);
   // console.log(isLoggedIn);
   useEffect(() => {
+    if (isLoggedIn) return;
     const token = localStorage.getItem("userId");
-    const decodedToken = token ? jwtDecode(token) : null;
+    if (token === "undefined" || !token) {
+      navigate("/auth");
+      return;
+    }
+    const decodedToken =
+      token && token !== "undefined" ? jwtDecode(token) : null;
     const currentTime = Date.now() / 1000;
     if (!decodedToken || decodedToken.exp < currentTime) {
+      console.log("token expired");
       // Redirect to "/auth" if the current route is not "/auth"
+      dispatch(authActions.logout());
       if (location.pathname !== "/auth") {
         navigate("/auth");
       }
       return;
     }
-    dispath(authActions.login());
-    setTimeout(() => {
-      dispath(authActions.logout());
-    }, (exp - currentTime) * 1000);
-  }, [dispath, location.pathname, navigate]);
-  // console.log(isLoggedIn);
+    const id = setTimeout(() => {
+      navigate("/auth");
+      dispatch(authActions.logout());
+    }, (decodedToken.exp - currentTime) * 1000);
+
+    dispatch(authActions.login({ accessToken: token }));
+    return () => {
+      clearTimeout(id);
+    };
+  }, [isLoggedIn]);
+
   return (
     <React.Fragment>
       <header>

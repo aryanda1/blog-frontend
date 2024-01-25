@@ -1,10 +1,9 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { authActions } from "../store";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-
+import axiosService from "../axios/axiosBase";
 const Auth = () => {
   const naviagte = useNavigate();
   const dispath = useDispatch();
@@ -26,14 +25,10 @@ const Auth = () => {
   const sendRequest = async (type = "login") => {
     try {
       setRequestInProgress(true);
-      const res = await axios.post(
-        `${import.meta.env.VITE_BACKEND_API}/api/user/${type}`,
-        {
-          name: inputs.name,
-          email: inputs.email,
-          password: inputs.password,
-        }
-      );
+      const res = await axiosService(`/api/user/${type}`, {
+        method: "POST",
+        data: JSON.stringify(inputs),
+      });
 
       const data = await res.data;
       setRequestInProgress(false);
@@ -57,8 +52,9 @@ const Auth = () => {
     e.preventDefault();
     try {
       let data = await sendRequest(isSignup ? "signup" : "login");
-      localStorage.setItem("userId", data.user._id);
-      await dispath(authActions.login());
+      localStorage.setItem("userId", data.accessToken);
+      console.log(data.accessToken);
+      await dispath(authActions.login({ accessToken: data.accessToken }));
       naviagte("/blogs");
     } catch (err) {
       alert(

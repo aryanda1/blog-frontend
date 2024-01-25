@@ -1,5 +1,5 @@
 import { Box, Button, InputLabel, TextField, Typography } from "@mui/material";
-import axios from "axios";
+import axiosPrivateService from "../axios/axiosPrivate";
 import React, { useState } from "react";
 
 const labelStyles = {
@@ -22,14 +22,14 @@ const AddBlog = () => {
     }));
   };
   const sendRequest = async () => {
-    const res = await axios
-      .post(`${import.meta.env.VITE_BACKEND_API}/api/blog/add`, {
+    const res = await axiosPrivateService("/api/blog/add", {
+      method: "POST",
+      data: JSON.stringify({
         title: inputs.title,
         description: inputs.description,
         image: inputs.imageURL,
-        user: localStorage.getItem("userId"),
-      })
-      .catch((err) => console.log(err));
+      }),
+    });
     const data = await res.data;
     return data;
   };

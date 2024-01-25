@@ -12,23 +12,28 @@ import React from "react";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosPrivateService from "../axios/axiosPrivate";
+
 const Blog = ({ title, description, imageURL, userName, isUser, id }) => {
   const navigate = useNavigate();
   const handleEdit = () => {
     navigate(`/myBlogs/${id}`);
   };
   const deleteRequest = async () => {
-    const res = await axios
-      .delete(`${import.meta.env.VITE_BACKEND_API}/api/blog/${id}`)
-      .catch((err) => console.log(err));
+    const res = await axiosPrivateService(`/api/blog/${id}`, {
+      method: "DELETE",
+    });
     const data = await res.data;
     return data;
   };
   const handleDelete = () => {
     deleteRequest()
-      .then(() => navigate("/"))
-      .then(() => navigate("/blogs"));
+      .then(() => window.alert("Blog deleted successfully"))
+      .then(() => navigate("/myBlogs"))
+      .catch((err) => {
+        console.log(err);
+        window.alert(err.message || "Something went wrong!");
+      });
   };
   return (
     <div>

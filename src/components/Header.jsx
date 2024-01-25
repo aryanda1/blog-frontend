@@ -13,11 +13,8 @@ import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "@mui/material";
 import { authActions } from "../store";
-import { useStyles } from "./utils";
-import { useStyles as useStyle } from "../componentSpecificStyles/Header";
+import styles from "../componentSpecificStyles/Header.module.css";
 const Header = () => {
-  const classes = useStyles();
-  const classes2 = useStyle();
   const dispath = useDispatch();
   const isLoggedIn = useSelector((state) => state.isLoggedIn);
   const { pathname } = useLocation();
@@ -47,26 +44,24 @@ const Header = () => {
           "linear-gradient(90deg, rgba(58,75,180,1) 2%, rgba(116,49,110,1) 36%, rgba(2,0,161,1) 73%, rgba(69,92,252,1) 100%)",
       }}
     >
-      <Toolbar className={classes2.toolBar}>
-        <Typography className={classes.font} variant="h4">
-          BlogsApp
-        </Typography>
+      <Toolbar className={styles.toolBar}>
+        <Typography variant="h4">BlogsApp</Typography>
         <Hamburger
           menuClickHandler={() => setHidden(!hidden)}
           closed={hidden}
         ></Hamburger>
         <div
-          className={`${classes2.HeaderTabsContainer} ${
-            hidden ? "hidden" : ""
+          className={`${styles.HeaderTabsContainer} ${
+            hidden ? styles.hidden : ""
           }`}
         >
           {isLoggedIn && (
-            <Box className={classes2.navTabsContainer}>
+            <Box className={styles.navTabsContainer}>
               <Tabs
                 textColor="inherit"
                 value={value}
                 onChange={(e, val) => setValue(val)}
-                className={classes2.navTabs}
+                className={styles.navTabs}
                 orientation={isMobile ? "vertical" : "horizontal"}
                 TabIndicatorProps={{
                   sx: {
@@ -75,21 +70,18 @@ const Header = () => {
                 }}
               >
                 <Tab
-                  className={classes.font}
                   LinkComponent={Link}
                   to="/blogs"
                   label="All Blogs"
                   onClick={() => setHidden(!hidden)}
                 />
                 <Tab
-                  className={classes.font}
                   LinkComponent={Link}
                   to="/myBlogs"
                   label="My Blogs"
                   onClick={() => setHidden(!hidden)}
                 />
                 <Tab
-                  className={classes.font}
                   LinkComponent={Link}
                   to="/blogs/add"
                   label="Add Blog"
@@ -98,7 +90,7 @@ const Header = () => {
               </Tabs>
             </Box>
           )}
-          <Box className={classes2.authActions}>
+          <Box className={styles.authActions}>
             {!isLoggedIn && (
               <>
                 {" "}

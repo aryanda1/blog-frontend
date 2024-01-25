@@ -1,7 +1,6 @@
 import { Box, Button, InputLabel, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
-import { useStyles } from "./utils";
 
 const labelStyles = {
   mb: 1,
@@ -10,7 +9,6 @@ const labelStyles = {
   fontWeight: "bold",
 };
 const AddBlog = () => {
-  const classes = useStyles();
   const [requestInProgress, setRequestInProgress] = useState(false);
   const [inputs, setInputs] = useState({
     title: "",
@@ -71,7 +69,6 @@ const AddBlog = () => {
           width={"80%"}
         >
           <Typography
-            className={classes.font}
             fontWeight={"bold"}
             padding={3}
             color="grey"
@@ -81,36 +78,27 @@ const AddBlog = () => {
           >
             Post Your Blog
           </Typography>
-          <InputLabel className={classes.font} sx={labelStyles}>
-            Title
-          </InputLabel>
+          <InputLabel sx={labelStyles}>Title</InputLabel>
           <TextField
             required
-            className={classes.font}
             name="title"
             onChange={handleChange}
             value={inputs.title}
             // margin="auto"
             variant="outlined"
           />
-          <InputLabel className={classes.font} sx={labelStyles}>
-            Description
-          </InputLabel>
+          <InputLabel sx={labelStyles}>Description</InputLabel>
           <TextField
             required
-            className={classes.font}
             name="description"
             onChange={handleChange}
             value={inputs.description}
             // margin="auto"
             variant="outlined"
           />
-          <InputLabel className={classes.font} sx={labelStyles}>
-            ImageURL
-          </InputLabel>
+          <InputLabel sx={labelStyles}>ImageURL</InputLabel>
           <TextField
             required
-            className={classes.font}
             name="imageURL"
             onChange={handleChange}
             value={inputs.imageURL}

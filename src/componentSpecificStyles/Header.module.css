@@ -1,0 +1,60 @@
+.toolBar {
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.HeaderTabsContainer {
+  width: 100%;
+}
+
+@media (min-width: 678px) {
+  .HeaderTabsContainer {
+    display: flex;
+    flex: 1;
+    width: auto;
+    align-items: center;
+  }
+}
+
+.navTabsContainer {
+  display: flex;
+  margin-left: auto;
+}
+
+.authActions {
+  display: flex;
+  margin-left: auto;
+}
+
+@media (max-width: 678px) {
+  .navTabsContainer {
+    justify-content: center;
+  }
+
+  .authActions {
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .HeaderTabsContainer {
+    opacity: 1;
+    position: absolute;
+    transition: top 700ms ease-in-out, opacity 700ms ease-in-out;
+    padding-block: 8px;
+    top: 110%;
+    background: linear-gradient(
+      90deg,
+      rgba(58, 75, 180, 1) 2%,
+      rgba(116, 49, 110, 1) 36%,
+      rgba(2, 0, 161, 1) 73%,
+      rgba(69, 92, 252, 1) 100%
+    );
+    left: 0;
+
+    &.hidden {
+      opacity: 0;
+      top: -500px;
+    }
+  }
+}

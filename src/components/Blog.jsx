@@ -13,9 +13,7 @@ import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useStyles } from "./utils";
 const Blog = ({ title, description, imageURL, userName, isUser, id }) => {
-  const classes = useStyles();
   const navigate = useNavigate();
   const handleEdit = () => {
     navigate(`/myBlogs/${id}`);
@@ -60,11 +58,7 @@ const Blog = ({ title, description, imageURL, userName, isUser, id }) => {
         )}
         <CardHeader
           avatar={
-            <Avatar
-              className={classes.font}
-              sx={{ bgcolor: "red" }}
-              aria-label="recipe"
-            >
+            <Avatar sx={{ bgcolor: "red" }} aria-label="recipe">
               {userName ? userName.charAt(0) : ""}
             </Avatar>
           }
@@ -80,11 +74,7 @@ const Blog = ({ title, description, imageURL, userName, isUser, id }) => {
         <CardContent>
           <hr />
           <br />
-          <Typography
-            className={classes.font}
-            variant="body2"
-            color="text.secondary"
-          >
+          <Typography variant="body2" color="text.secondary">
             <b>{userName}</b> {": "} {description}
           </Typography>
         </CardContent>

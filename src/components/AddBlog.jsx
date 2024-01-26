@@ -3,6 +3,7 @@ import axiosPrivateService from "../axios/axiosPrivate";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { blogActions } from "../store/blogSlice";
+import FileUpload from "./GlobalComponents/file-upload";
 const labelStyles = {
   mb: 1,
   mt: 2,
@@ -15,7 +16,6 @@ const AddBlog = () => {
   const [inputs, setInputs] = useState({
     title: "",
     description: "",
-    imageURL: "",
   });
   const handleChange = (e) => {
     setInputs((prevState) => ({
@@ -24,13 +24,16 @@ const AddBlog = () => {
     }));
   };
   const sendRequest = async () => {
+    const formData = new FormData();
+    formData.append("title", inputs.title);
+    formData.append("description", inputs.description);
+    formData.append("file", images[0]);
     const res = await axiosPrivateService("/api/blog/add", {
       method: "POST",
-      data: JSON.stringify({
-        title: inputs.title,
-        description: inputs.description,
-        image: inputs.imageURL,
-      }),
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      data: formData,
     });
     const data = await res.data;
     return data;
@@ -40,7 +43,7 @@ const AddBlog = () => {
     if (
       inputs.title.length < 3 ||
       inputs.description.length < 3 ||
-      inputs.imageURL.length < 3
+      !images.length === 0
     ) {
       window.alert("Please fill all the fields correctly");
       return;
@@ -58,6 +61,9 @@ const AddBlog = () => {
       })
       .finally(() => setRequestInProgress(false));
   };
+  const [images, setImages] = useState([]);
+  const updateUploadedFiles = (files) => setImages(files);
+  console.log(images);
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -101,15 +107,12 @@ const AddBlog = () => {
             // margin="auto"
             variant="outlined"
           />
-          <InputLabel sx={labelStyles}>ImageURL</InputLabel>
-          <TextField
-            required
-            name="imageURL"
-            onChange={handleChange}
-            value={inputs.imageURL}
-            // margin="auto"
-            variant="outlined"
+          <FileUpload
+            accept=".jpg,.png,.jpeg"
+            label="Image"
+            updateFilesCb={updateUploadedFiles}
           />
+          ;{/* <IconButtons /> */}
           <Button
             sx={{ mt: 2, borderRadius: 4, fontSize: "clamp(1rem,2vw,1.5rem)" }}
             variant="contained"

@@ -1,7 +1,8 @@
 import { Box, Button, InputLabel, TextField, Typography } from "@mui/material";
 import axiosPrivateService from "../axios/axiosPrivate";
 import React, { useState } from "react";
-
+import { useDispatch } from "react-redux";
+import { blogActions } from "../store/blogSlice";
 const labelStyles = {
   mb: 1,
   mt: 2,
@@ -9,6 +10,7 @@ const labelStyles = {
   fontWeight: "bold",
 };
 const AddBlog = () => {
+  const dispatch = useDispatch();
   const [requestInProgress, setRequestInProgress] = useState(false);
   const [inputs, setInputs] = useState({
     title: "",
@@ -46,7 +48,10 @@ const AddBlog = () => {
     setRequestInProgress(true);
     console.log(inputs);
     sendRequest()
-      .then((data) => console.log(data))
+      .then((data) => {
+        console.log(data);
+        dispatch(blogActions.addUserBlogs({ blog: data.blog }));
+      })
       .then(() => window.alert("Blog added successfully"))
       .catch((err) => {
         window.alert(err.message || "Something went wrong!");

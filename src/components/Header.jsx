@@ -12,11 +12,11 @@ import Hamburger from "./GlobalComponents/Hamburger";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "@mui/material";
-import { authActions } from "../store";
+import { authActions } from "../store/authSlice";
 import styles from "../componentSpecificStyles/Header.module.css";
 const Header = () => {
   const dispath = useDispatch();
-  const isLoggedIn = useSelector((state) => state.isLoggedIn);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const { pathname } = useLocation();
   const [value, setValue] = useState(false);
   const [hidden, setHidden] = useState(true);

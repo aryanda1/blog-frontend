@@ -10,13 +10,13 @@ import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import Auth from "./components/Auth";
 import { useDispatch, useSelector } from "react-redux";
-import { authActions } from "./store";
+import { authActions } from "./store/authSlice";
 function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const isLoggedIn = useSelector((state) => state.isLoggedIn);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   // console.log(isLoggedIn);
   useEffect(() => {
     if (isLoggedIn) return;

@@ -1,7 +1,7 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { authActions } from "../store";
+import { authActions } from "../store/authSlice";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import axiosService from "../axios/axiosBase";
 const Auth = () => {
@@ -54,7 +54,7 @@ const Auth = () => {
       let data = await sendRequest(isSignup ? "signup" : "login");
       localStorage.setItem("userId", data.accessToken);
       console.log(data.accessToken);
-      await dispath(authActions.login({ accessToken: data.accessToken }));
+      await dispath(authActions.login(data));
       naviagte("/blogs");
     } catch (err) {
       alert(

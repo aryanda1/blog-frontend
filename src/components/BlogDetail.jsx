@@ -3,11 +3,15 @@ import { Box } from "@mui/material";
 import axiosPrivateService from "../axios/axiosPrivate";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { blogActions } from "../store/blogSlice";
 const labelStyles = { mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" };
 
 const BlogDetail = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [blog, setBlog] = useState();
+  const [requestInProgress, setRequestInProgress] = useState(false);
   const id = useParams().id;
   console.log(id);
   const [inputs, setInputs] = useState({});
@@ -51,16 +55,23 @@ const BlogDetail = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(inputs);
+    if (inputs.title.length < 3 || inputs.description.length < 3) {
+      window.alert("Please fill all the fields correctly");
+      return;
+    }
+    setRequestInProgress(true);
     sendRequest()
       .then((data) => {
         console.log(data);
+        dispatch(blogActions.updateUserBlogs({ id, blog: inputs }));
         window.alert("Blog Updated successfully!");
       })
       .then(() => navigate("/myBlogs"))
       .catch((err) => {
         console.log(err);
         window.alert(err.message || "Something went wrong!");
-      });
+      })
+      .finally(() => setRequestInProgress(false));
   };
 
   return (
@@ -110,8 +121,9 @@ const BlogDetail = () => {
               variant="contained"
               color="warning"
               type="submit"
+              disabled={requestInProgress}
             >
-              Submit
+              {requestInProgress ? "Submitting.." : "Submit"}
             </Button>
           </Box>
         </form>

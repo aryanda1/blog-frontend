@@ -13,8 +13,12 @@ import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useNavigate } from "react-router-dom";
 import axiosPrivateService from "../axios/axiosPrivate";
+import { useDispatch } from "react-redux";
+import { blogActions } from "../store/blogSlice";
 
 const Blog = ({ title, description, imageURL, userName, isUser, id }) => {
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
   const handleEdit = () => {
     navigate(`/myBlogs/${id}`);
@@ -29,6 +33,7 @@ const Blog = ({ title, description, imageURL, userName, isUser, id }) => {
   const handleDelete = () => {
     deleteRequest()
       .then(() => window.alert("Blog deleted successfully"))
+      .then(() => dispatch(blogActions.deleteUserBlogs({ id })))
       .then(() => navigate("/myBlogs"))
       .catch((err) => {
         console.log(err);

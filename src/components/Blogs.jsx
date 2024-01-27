@@ -2,18 +2,15 @@ import React, { useEffect, useState } from "react";
 import Blog from "./Blog";
 import Fallback from "./Fallback";
 import axiosPrivateService from "../axios/axiosPrivate";
+import useFetchBlogs from "../customHooksAndSevices/fetchBlogs";
 
 const Blogs = () => {
+  const { fetchBlogs } = useFetchBlogs();
   const [blogs, setBlogs] = useState();
   const [fallbackText, setFallBackText] = useState("Loading...");
-  const sendRequest = async () => {
-    const res = await axiosPrivateService("/api/blog");
-    const data = await res.data;
-    return data;
-  };
   useEffect(() => {
-    sendRequest()
-      .then((data) => {
+    fetchBlogs()
+      .then(({ data }) => {
         if (data.blogs.length === 0) setFallBackText("No blogs found");
         setBlogs(data.blogs);
       })

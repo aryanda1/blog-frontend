@@ -52,7 +52,7 @@ const AddBlog = () => {
     console.log(inputs);
     sendRequest()
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         dispatch(blogActions.addUserBlogs({ blog: data.blog }));
       })
       .then(() => window.alert("Blog added successfully"))
@@ -63,7 +63,7 @@ const AddBlog = () => {
   };
   const [images, setImages] = useState([]);
   const updateUploadedFiles = (files) => setImages(files);
-  console.log(images);
+  // console.log(images);
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -112,7 +112,6 @@ const AddBlog = () => {
             label="Image"
             updateFilesCb={updateUploadedFiles}
           />
-          ;{/* <IconButtons /> */}
           <Button
             sx={{ mt: 2, borderRadius: 4, fontSize: "clamp(1rem,2vw,1.5rem)" }}
             variant="contained"

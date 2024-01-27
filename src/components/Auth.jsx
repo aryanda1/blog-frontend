@@ -3,10 +3,13 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { authActions } from "../store/authSlice";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import axiosService from "../axios/axiosBase";
+import useLogin from "../customHooksAndSevices/loginHook";
+import useRegister from "../customHooksAndSevices/registerHook";
 const Auth = () => {
+  const { login } = useLogin();
+  const { register } = useRegister();
   const naviagte = useNavigate();
-  const dispath = useDispatch();
+  const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const [inputs, setInputs] = useState({
     name: "",
@@ -22,39 +25,16 @@ const Auth = () => {
       [e.target.name]: e.target.value,
     }));
   };
-  const sendRequest = async (type = "login") => {
-    try {
-      setRequestInProgress(true);
-      const res = await axiosService(`/api/user/${type}`, {
-        method: "POST",
-        data: JSON.stringify(inputs),
-      });
-
-      const data = await res.data;
-      setRequestInProgress(false);
-      // Check if the request was unsuccessful
-      if (data === undefined) {
-        throw new Error("Request was unsuccessful");
-      }
-
-      return data;
-    } catch (error) {
-      // Log the error or handle it as needed
-      console.error("Error in sendRequest:", error);
-
-      // Re-throw the error to propagate it to the calling function
-      setRequestInProgress(false);
-      throw error;
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      let data = await sendRequest(isSignup ? "signup" : "login");
-      localStorage.setItem("userId", data.accessToken);
-      console.log(data.accessToken);
-      await dispath(authActions.login(data));
+      let data;
+      if (isSignup) data = await register(inputs);
+      else data = await login(inputs);
+
+      localStorage.setItem("userId", data.data.accessToken);
+      dispatch(authActions.login(data.data));
       naviagte("/blogs");
     } catch (err) {
       alert(

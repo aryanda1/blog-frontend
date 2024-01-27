@@ -12,26 +12,20 @@ import React from "react";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useNavigate } from "react-router-dom";
-import axiosPrivateService from "../axios/axiosPrivate";
 import { useDispatch } from "react-redux";
 import { blogActions } from "../store/blogSlice";
+import useDeleteBlog from "../customHooksAndSevices/deleteBlog";
 
 const Blog = ({ title, description, imageURL, userName, isUser, id }) => {
   const dispatch = useDispatch();
-
+  const { deleteBlog } = useDeleteBlog();
   const navigate = useNavigate();
   const handleEdit = () => {
     navigate(`/myBlogs/${id}`);
   };
-  const deleteRequest = async () => {
-    const res = await axiosPrivateService(`/api/blog/${id}`, {
-      method: "DELETE",
-    });
-    const data = await res.data;
-    return data;
-  };
+
   const handleDelete = () => {
-    deleteRequest()
+    deleteBlog({ id })
       .then(() => window.alert("Blog deleted successfully"))
       .then(() => dispatch(blogActions.deleteUserBlogs({ id })))
       .then(() => navigate("/myBlogs"))

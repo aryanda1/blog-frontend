@@ -7,12 +7,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { blogActions } from "../store/blogSlice";
 import { authActions } from "../store/authSlice";
 import useFetchUserBlogs from "../customHooksAndSevices/fetchUserBlogs";
+import useFetchBlog from "../customHooksAndSevices/fetchBlog";
 import FileUpload from "./GlobalComponents/file-upload";
 const labelStyles = { mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" };
 
 const BlogDetail = () => {
   const blogs = useSelector((state) => state.blog.userBlogs);
   const { fetchUserBlogs } = useFetchUserBlogs();
+  const { fetchBlog } = useFetchBlog();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [blog, setBlog] = useState();
@@ -26,14 +28,10 @@ const BlogDetail = () => {
       [e.target.name]: e.target.value,
     }));
   };
-  const fetchDetails = async () => {
-    const res = await axiosPrivateService(`/api/blog/${id}`);
-    const data = await res.data;
-    return data;
-  };
+
   useEffect(() => {
-    fetchDetails()
-      .then((data) => {
+    fetchBlog({ id })
+      .then(({ data }) => {
         setBlog(data.blog);
         setInputs({
           title: data.blog.title,
@@ -78,16 +76,16 @@ const BlogDetail = () => {
   // console.log(blog);
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(inputs);
+    // console.log(inputs);
     if (inputs.title.length < 3 || inputs.description.length < 3) {
       window.alert("Please fill all the fields correctly");
       return;
     }
-    console.log(inputs);
+    // console.log(inputs);
     setRequestInProgress(true);
     sendRequest()
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         dispatch(blogActions.updateUserBlogs({ id, blog: data.blog }));
         window.alert("Blog Updated successfully!");
       })

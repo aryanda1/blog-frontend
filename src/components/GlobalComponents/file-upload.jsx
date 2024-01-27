@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   FileUploadContainer,
   FormField,
@@ -12,10 +12,14 @@ import {
   RemoveFileIcon,
   InputLabel,
 } from "./file-upload.styles";
-import { CloudDownload, FileUpload as FileIcon } from "@mui/icons-material";
+import {
+  CloudDownload,
+  FileUpload as FileIcon,
+  DeleteForever,
+} from "@mui/icons-material";
 
 const KILO_BYTES_PER_BYTE = 1000;
-const DEFAULT_MAX_FILE_SIZE_IN_BYTES = 500000;
+const DEFAULT_MAX_FILE_SIZE_IN_BYTES = 5000000;
 
 const convertNestedObjectToArray = (nestedObj) =>
   Object.keys(nestedObj).map((key) => nestedObj[key]);
@@ -25,6 +29,7 @@ const convertBytesToKB = (bytes) => Math.round(bytes / KILO_BYTES_PER_BYTE);
 const FileUpload = ({
   label,
   updateFilesCb,
+  originalImgUrl,
   maxFileSizeInBytes = DEFAULT_MAX_FILE_SIZE_IN_BYTES,
   ...otherProps
 }) => {
@@ -88,32 +93,44 @@ const FileUpload = ({
       <FilePreviewContainer>
         <span>To Upload</span>
         <PreviewList>
-          {Object.keys(files).map((fileName, index) => {
-            let file = files[fileName];
-            let isImageFile = file.type.split("/")[0] === "image";
-            return (
-              <PreviewContainer key={fileName}>
+          <>
+            {originalImgUrl && (
+              <PreviewContainer>
                 <div>
-                  {isImageFile && (
-                    <ImagePreview
-                      src={URL.createObjectURL(file)}
-                      alt={`file preview ${index}`}
-                    />
-                  )}
-                  <FileMetaData isImageFile={isImageFile}>
-                    <span>{file.name}</span>
-                    <aside>
-                      <span>{convertBytesToKB(file.size)} kb</span>
-                      <RemoveFileIcon
-                        className="fas fa-trash-alt"
-                        onClick={() => removeFile(fileName)}
-                      />
-                    </aside>
+                  <ImagePreview src={originalImgUrl} alt="original image" />
+                  <FileMetaData isImageFile={true}>
+                    <span>Original Image</span>
                   </FileMetaData>
                 </div>
               </PreviewContainer>
-            );
-          })}
+            )}
+
+            {Object.keys(files).map((fileName, index) => {
+              let file = files[fileName];
+              let isImageFile = file.type.split("/")[0] === "image";
+              return (
+                <PreviewContainer key={fileName}>
+                  <div>
+                    {isImageFile && (
+                      <ImagePreview
+                        src={URL.createObjectURL(file)}
+                        alt={`file preview ${index}`}
+                      />
+                    )}
+                    <FileMetaData isImageFile={isImageFile}>
+                      <span>{file.name}</span>
+                      <aside>
+                        <span>{convertBytesToKB(file.size)} kb</span>
+                        <RemoveFileIcon onClick={() => removeFile(fileName)}>
+                          <DeleteForever />
+                        </RemoveFileIcon>
+                      </aside>
+                    </FileMetaData>
+                  </div>
+                </PreviewContainer>
+              );
+            })}
+          </>
         </PreviewList>
       </FilePreviewContainer>
     </>

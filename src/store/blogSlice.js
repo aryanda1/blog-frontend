@@ -20,13 +20,12 @@ const blogSlice = createSlice({
       );
     },
     updateUserBlogs(state, action) {
-      const blogIdx = state.userBlogs.findIndex(
-        (blog) => blog._id === action.payload.id
-      );
+      const { blog, id } = action.payload;
+      const blogIdx = state.userBlogs.findIndex((blog) => blog._id === id);
       if (blogIdx !== -1)
         state.userBlogs[blogIdx] = {
           ...state.userBlogs[blogIdx],
-          ...action.payload.blog,
+          ...blog,
         };
     },
 

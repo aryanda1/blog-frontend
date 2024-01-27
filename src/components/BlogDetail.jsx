@@ -3,17 +3,22 @@ import { Box } from "@mui/material";
 import axiosPrivateService from "../axios/axiosPrivate";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { blogActions } from "../store/blogSlice";
+import { authActions } from "../store/authSlice";
+import useFetchUserBlogs from "../customHooksAndSevices/fetchUserBlogs";
+import FileUpload from "./GlobalComponents/file-upload";
 const labelStyles = { mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" };
 
 const BlogDetail = () => {
+  const blogs = useSelector((state) => state.blog.userBlogs);
+  const { fetchUserBlogs } = useFetchUserBlogs();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [blog, setBlog] = useState();
   const [requestInProgress, setRequestInProgress] = useState(false);
   const id = useParams().id;
-  console.log(id);
+  // console.log(id);
   const [inputs, setInputs] = useState({});
   const handleChange = (e) => {
     setInputs((prevState) => ({
@@ -40,18 +45,37 @@ const BlogDetail = () => {
         window.alert(err.message || "Something went wrong!");
       });
   }, [id]);
+
+  //if user directly reloaded the edit page, the userblogs will be undefined
+  useEffect(() => {
+    if (blogs !== null) {
+      return;
+    }
+    fetchUserBlogs()
+      .then(({ data }) => {
+        if (data.blogs.length === 0) setFallBackText("No blogs found");
+        dispatch(blogActions.setUserBlogs({ blogs: data.blogs }));
+        dispatch(authActions.setUserName({ name: data.name }));
+      })
+      .catch((err) => {
+        console.log(err);
+        window.alert(err.message || "Something went wrong!");
+      });
+  }, [blogs]);
   const sendRequest = async () => {
+    let formData = new FormData();
+    Object.keys(inputs).forEach((key) => formData.set(key, inputs[key]));
     const res = await axiosPrivateService(`api/blog/update/${id}`, {
       method: "PUT",
-      data: JSON.stringify({
-        title: inputs.title,
-        description: inputs.description,
-      }),
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      data: formData,
     });
     const data = await res.data;
     return data;
   };
-  console.log(blog);
+  // console.log(blog);
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(inputs);
@@ -59,11 +83,12 @@ const BlogDetail = () => {
       window.alert("Please fill all the fields correctly");
       return;
     }
+    console.log(inputs);
     setRequestInProgress(true);
     sendRequest()
       .then((data) => {
         console.log(data);
-        dispatch(blogActions.updateUserBlogs({ id, blog: inputs }));
+        dispatch(blogActions.updateUserBlogs({ id, blog: data.blog }));
         window.alert("Blog Updated successfully!");
       })
       .then(() => navigate("/myBlogs"))
@@ -72,6 +97,14 @@ const BlogDetail = () => {
         window.alert(err.message || "Something went wrong!");
       })
       .finally(() => setRequestInProgress(false));
+  };
+
+  //callback function when image is changed by user
+  const updateUploadedFiles = (files) => {
+    const prevState = { ...inputs };
+    if (files.length === 0) delete prevState.file;
+    else prevState.file = files[files.length - 1];
+    setInputs(prevState);
   };
 
   return (
@@ -114,6 +147,12 @@ const BlogDetail = () => {
               value={inputs.description}
               margin="auto"
               variant="outlined"
+            />
+            <FileUpload
+              accept=".jpg,.png,.jpeg"
+              label="Image"
+              updateFilesCb={updateUploadedFiles}
+              originalImgUrl={blog ? blog.image : undefined}
             />
 
             <Button

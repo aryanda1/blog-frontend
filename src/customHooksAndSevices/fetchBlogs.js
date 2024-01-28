@@ -2,15 +2,18 @@ import { useAxiosPrivateServiceWithInterceptors } from "./useAxiosPrivateHook";
 
 export default function useFetchBlogs() {
   const axiosPrivateService = useAxiosPrivateServiceWithInterceptors();
-  const fetchBlogs = async () => {
-    return axiosPrivateService("/api/blog", {
-      method: "GET",
-    })
+  const fetchBlogs = async ({ lastTime }) => {
+    return axiosPrivateService(
+      `/api/blog?lastTime=${lastTime ? lastTime : new Date().toISOString()}`,
+      {
+        method: "GET",
+      }
+    )
       .then((response) => {
         return response;
       })
       .catch((error) => {
-        return error;
+        throw error;
       });
   };
 

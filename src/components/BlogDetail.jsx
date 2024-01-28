@@ -40,26 +40,15 @@ const BlogDetail = () => {
       })
       .catch((err) => {
         console.log(err);
-        window.alert(err.message || "Something went wrong!");
+        window.alert(
+          (err.response && err.response.data && err.response.data.message) ||
+            err.message ||
+            "Something went wrong!"
+        );
       });
   }, [id]);
 
   //if user directly reloaded the edit page, the userblogs will be undefined
-  useEffect(() => {
-    if (blogs !== null) {
-      return;
-    }
-    fetchUserBlogs()
-      .then(({ data }) => {
-        if (data.blogs.length === 0) setFallBackText("No blogs found");
-        dispatch(blogActions.setUserBlogs({ blogs: data.blogs }));
-        dispatch(authActions.setUserName({ name: data.name }));
-      })
-      .catch((err) => {
-        console.log(err);
-        window.alert(err.message || "Something went wrong!");
-      });
-  }, [blogs]);
   const sendRequest = async () => {
     let formData = new FormData();
     Object.keys(inputs).forEach((key) => formData.set(key, inputs[key]));

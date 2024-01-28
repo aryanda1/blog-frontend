@@ -4,6 +4,7 @@ import UserBlogs from "./components/UserBlogs";
 import BlogDetail from "./components/BlogDetail";
 import AddBlog from "./components/AddBlog";
 import Error from "./components/Error404";
+import UserBlogloader from "./components/UserBlogLoader";
 
 import React, { useEffect } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
@@ -60,9 +61,11 @@ function App() {
           ) : (
             <>
               <Route path="/blogs" element={<Blogs />} />
-              <Route path="/blogs/add" element={<AddBlog />} />
-              <Route path="/myBlogs" element={<UserBlogs />} />
-              <Route path="/myBlogs/:id" element={<BlogDetail />} />
+              <Route element={<UserBlogloader />}>
+                <Route path="/blogs/add" element={<AddBlog />} />
+                <Route path="/myBlogs" element={<UserBlogs />} />
+                <Route path="/myBlogs/:id" element={<BlogDetail />} />
+              </Route>
               <Route path="*" element={<Error />} />
             </>
           )}

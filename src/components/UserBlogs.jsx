@@ -18,16 +18,6 @@ const UserBlogs = () => {
       else setFallBackText("");
       return;
     }
-    fetchUserBlogs()
-      .then(({ data }) => {
-        if (data.blogs.length === 0) setFallBackText("No blogs found");
-        dispatch(blogActions.setUserBlogs({ blogs: data.blogs }));
-        dispatch(authActions.setUserName({ name: data.name }));
-      })
-      .catch((err) => {
-        console.log(err);
-        window.alert(err.message || "Something went wrong!");
-      });
   }, [blogs]);
   return (
     <div>

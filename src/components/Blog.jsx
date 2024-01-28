@@ -31,7 +31,11 @@ const Blog = ({ title, description, imageURL, userName, isUser, id }) => {
       .then(() => navigate("/myBlogs"))
       .catch((err) => {
         console.log(err);
-        window.alert(err.message || "Something went wrong!");
+        window.alert(
+          (err.response && err.response.data && err.response.data.message) ||
+            err.message ||
+            "Something went wrong!"
+        );
       });
   };
   return (

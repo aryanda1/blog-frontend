@@ -37,9 +37,11 @@ const Auth = () => {
       dispatch(authActions.login(data.data));
       naviagte("/blogs");
     } catch (err) {
+      console.log(err);
       alert(
         (err.response && err.response.data && err.response.data.message) ||
-          err.message
+          err.message ||
+          "Something went wrong!"
       );
     }
   };

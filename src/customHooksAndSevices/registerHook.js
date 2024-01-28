@@ -1,7 +1,7 @@
 import axiosService from "../axios/axiosBase";
 
 const register = async (credentials) => {
-  return axiosService("/api/user/register", {
+  return axiosService("/api/user/signup", {
     method: "POST",
     data: JSON.stringify(credentials),
   })
@@ -9,7 +9,7 @@ const register = async (credentials) => {
       return data;
     })
     .catch((err) => {
-      return err;
+      throw err;
     });
 };
 

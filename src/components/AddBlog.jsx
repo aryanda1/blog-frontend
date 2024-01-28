@@ -57,7 +57,11 @@ const AddBlog = () => {
       })
       .then(() => window.alert("Blog added successfully"))
       .catch((err) => {
-        window.alert(err.message || "Something went wrong!");
+        window.alert(
+          (err.response && err.response.data && err.response.data.message) ||
+            err.message ||
+            "Something went wrong!"
+        );
       })
       .finally(() => setRequestInProgress(false));
   };

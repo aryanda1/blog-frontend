@@ -9,7 +9,7 @@ const login = async (credentials) => {
       return data;
     })
     .catch((err) => {
-      return err;
+      throw err;
     });
 };
 
